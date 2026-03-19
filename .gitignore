@@ -2,9 +2,9 @@
 **/node_modules/
 **/.next/
 
-# Env files (secrets)
-**/.env
-**/.env.*
+# Env files (secrets) — .env.example repoda kalsın
+**/.env*
+!**/.env.example
 
 # SQLite dev database
 **/dev.db
