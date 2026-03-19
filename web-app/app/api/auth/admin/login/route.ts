@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
 import { safeJsonError, signAdminJwt, ADMIN_COOKIE } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -28,9 +27,6 @@ export async function POST(request: Request) {
       path: '/',
       maxAge: 60 * 60 * 24 * 14,
     });
-
-    // prisma import unused; keep for future expansions
-    void prisma;
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
