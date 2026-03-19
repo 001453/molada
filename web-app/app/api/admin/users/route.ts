@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { ADMIN_COOKIE, safeJsonError, verifyJwt } from '@/lib/auth';
 
 export async function GET() {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(ADMIN_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -11,20 +12,18 @@ export async function GET() {
     const decoded = verifyJwt(token);
     if (decoded.role !== 'admin') return safeJsonError('Yetkisiz.', 403);
 
-    const users = await prisma.user.findMany({
-      where: { status: 'PENDING' },
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        plan: true,
-        createdAt: true,
-      },
-    });
+    const { data: users, error } = await supabase
+      .from('User')
+      .select('id, name, email, phone, plan, createdAt')
+      .eq('status', 'PENDING')
+      .order('createdAt', { ascending: false });
 
-    return new Response(JSON.stringify({ ok: true, users }), {
+    if (error) {
+      console.error('admin users list:', error);
+      return safeJsonError('Admin listesi alınamadı.', 500);
+    }
+
+    return new Response(JSON.stringify({ ok: true, users: users ?? [] }), {
       status: 200,
       headers: { 'content-type': 'application/json; charset=utf-8' },
     });

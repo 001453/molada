@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { safeJsonError, USER_COOKIE, verifyJwt } from '@/lib/auth';
 
 export async function GET() {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(USER_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -11,12 +12,13 @@ export async function GET() {
     const decoded = verifyJwt(token);
     if (decoded.role !== 'user') return safeJsonError('Yetkisiz.', 403);
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.sub },
-      select: { id: true, name: true, email: true, phone: true, status: true, plan: true, approvedAt: true },
-    });
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('id, name, email, phone, status, plan, approvedAt')
+      .eq('id', decoded.sub)
+      .maybeSingle();
 
-    if (!user) return safeJsonError('Kullanıcı bulunamadı.', 404);
+    if (error || !user) return safeJsonError('Kullanıcı bulunamadı.', 404);
 
     return new Response(JSON.stringify({ ok: true, user }), {
       status: 200,

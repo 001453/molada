@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin, nowIso } from '@/lib/supabaseAdmin';
 import { ADMIN_COOKIE, safeJsonError, verifyJwt } from '@/lib/auth';
 import { generateCheckInCode, generateWifiPassword } from '@/lib/codes';
 
@@ -8,6 +8,7 @@ export async function POST(
   context: { params: { id: string } }
 ) {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(ADMIN_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -16,27 +17,40 @@ export async function POST(
     if (decoded.role !== 'admin') return safeJsonError('Yetkisiz.', 403);
 
     const reservationId = context.params.id;
-    const reservation = await prisma.reservation.findUnique({ where: { id: reservationId } });
-    if (!reservation) return safeJsonError('Rezervasyon bulunamadı.', 404);
+    const { data: reservation, error: fErr } = await supabase
+      .from('Reservation')
+      .select('*')
+      .eq('id', reservationId)
+      .maybeSingle();
+
+    if (fErr || !reservation) return safeJsonError('Rezervasyon bulunamadı.', 404);
     if (reservation.status !== 'PENDING') return safeJsonError('Rezervasyon durumu uygun değil.', 409);
 
     const now = new Date();
     const checkInCode = generateCheckInCode();
     const wifiSsid = process.env.WIFI_SSID || 'MoladaWiFi';
     const wifiPassword = generateWifiPassword();
+    const t = nowIso();
+    const adminNote = reservation.adminNote ?? 'Onay ' + now.toISOString();
 
-    await prisma.reservation.update({
-      where: { id: reservationId },
-      data: {
+    const { error: uErr } = await supabase
+      .from('Reservation')
+      .update({
         status: 'APPROVED',
         checkInCode,
         wifiSsid,
         wifiPassword,
         wifiStartAt: reservation.startAt,
         wifiEndAt: reservation.endAt,
-        adminNote: reservation.adminNote ?? `Onay ${now.toISOString()}`,
-      },
-    });
+        adminNote,
+        updatedAt: t,
+      })
+      .eq('id', reservationId);
+
+    if (uErr) {
+      console.error('admin approve reservation:', uErr);
+      return safeJsonError('Onay başarısız.', 500);
+    }
 
     return new Response(JSON.stringify({ ok: true, checkInCode, wifiPassword }), {
       status: 200,

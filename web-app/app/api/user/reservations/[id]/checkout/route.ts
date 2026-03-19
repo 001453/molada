@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin, nowIso } from '@/lib/supabaseAdmin';
 import { safeJsonError, USER_COOKIE, verifyJwt } from '@/lib/auth';
 
 export async function POST(
@@ -7,6 +7,7 @@ export async function POST(
   context: { params: { id: string } }
 ) {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(USER_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -21,21 +22,38 @@ export async function POST(
     const code = String(body?.code ?? '');
     if (!code) return safeJsonError('Kod gerekli.', 400);
 
-    const reservation = await prisma.reservation.findUnique({
-      where: { id: reservationId },
-      include: { checkIn: true },
-    });
+    const { data: reservation, error: rErr } = await supabase
+      .from('Reservation')
+      .select('*')
+      .eq('id', reservationId)
+      .maybeSingle();
 
-    if (!reservation || reservation.userId !== userId) return safeJsonError('Rezervasyon bulunamadı.', 404);
+    if (rErr || !reservation || reservation.userId !== userId) {
+      return safeJsonError('Rezervasyon bulunamadı.', 404);
+    }
     if (reservation.status !== 'APPROVED') return safeJsonError('Rezervasyon onaylı değil.', 403);
-    if (!reservation.checkInCode || reservation.checkInCode !== code) return safeJsonError('Kod hatalı.', 403);
-    if (!reservation.checkIn) return safeJsonError('Önce giriş yapın.', 409);
-    if (reservation.checkIn.checkedOutAt) return safeJsonError('Zaten çıkış yapılmış.', 409);
+    if (!reservation.checkInCode || reservation.checkInCode !== code) {
+      return safeJsonError('Kod hatalı.', 403);
+    }
 
-    await prisma.checkIn.update({
-      where: { reservationId: reservation.id },
-      data: { checkedOutAt: new Date() },
-    });
+    const { data: checkIn, error: cErr } = await supabase
+      .from('CheckIn')
+      .select('*')
+      .eq('reservationId', reservationId)
+      .maybeSingle();
+
+    if (cErr || !checkIn) return safeJsonError('Önce giriş yapın.', 409);
+    if (checkIn.checkedOutAt) return safeJsonError('Zaten çıkış yapılmış.', 409);
+
+    const { error: upErr } = await supabase
+      .from('CheckIn')
+      .update({ checkedOutAt: nowIso() })
+      .eq('reservationId', reservation.id);
+
+    if (upErr) {
+      console.error('checkout update:', upErr);
+      return safeJsonError('Çıkış yapılamadı.', 500);
+    }
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
@@ -45,4 +63,3 @@ export async function POST(
     return safeJsonError('Çıkış yapılamadı.', 500);
   }
 }
-

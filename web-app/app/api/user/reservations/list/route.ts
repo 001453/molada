@@ -1,9 +1,10 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { safeJsonError, USER_COOKIE, verifyJwt } from '@/lib/auth';
 
 export async function GET() {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(USER_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -13,39 +14,64 @@ export async function GET() {
 
     const userId = decoded.sub;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { status: true, wifiSsid: true, wifiPassword: true, wifiStartAt: true, wifiEndAt: true },
-    });
+    const { data: user, error: uErr } = await supabase
+      .from('User')
+      .select('status, wifiSsid, wifiPassword, wifiStartAt, wifiEndAt')
+      .eq('id', userId)
+      .maybeSingle();
 
-    if (!user) return safeJsonError('Kullanıcı bulunamadı.', 404);
+    if (uErr || !user) return safeJsonError('Kullanıcı bulunamadı.', 404);
 
-    const reservations = await prisma.reservation.findMany({
-      where: { userId },
-      orderBy: { startAt: 'desc' },
-      include: { checkIn: true },
-    });
+    const { data: reservations, error: rErr } = await supabase
+      .from('Reservation')
+      .select('*')
+      .eq('userId', userId)
+      .order('startAt', { ascending: false });
+
+    if (rErr) {
+      console.error('user reservations list:', rErr);
+      return safeJsonError('Rezervasyonlar alınamadı.', 500);
+    }
+
+    const resList = reservations ?? [];
+    const resIds = resList.map((r) => r.id);
+    let checkInByResId: Record<string, { checkedInAt: string; checkedOutAt: string | null }> = {};
+    if (resIds.length > 0) {
+      const { data: checkIns } = await supabase.from('CheckIn').select('*').in('reservationId', resIds);
+      if (checkIns) {
+        for (const c of checkIns) {
+          checkInByResId[c.reservationId] = c;
+        }
+      }
+    }
 
     const now = new Date();
+    const ws = user.wifiStartAt ? new Date(user.wifiStartAt as string) : null;
+    const we = user.wifiEndAt ? new Date(user.wifiEndAt as string) : null;
     const membershipWifiAllowed =
       user.status === 'APPROVED' &&
       !!user.wifiPassword &&
-      (!user.wifiStartAt || now >= user.wifiStartAt) &&
-      (!user.wifiEndAt || now <= user.wifiEndAt);
+      (!ws || now >= ws) &&
+      (!we || now <= we);
 
     const membershipWifi = membershipWifiAllowed
       ? { wifiSsid: user.wifiSsid, wifiPassword: user.wifiPassword }
       : { wifiSsid: null, wifiPassword: null };
 
-    const mapped = reservations.map((r: (typeof reservations)[number]) => {
-      const hasCheckedIn = !!r.checkIn;
+    const mapped = resList.map((r) => {
+      const checkIn = checkInByResId[r.id];
+      const hasCheckedIn = !!checkIn;
+      const wStart = r.wifiStartAt ? new Date(r.wifiStartAt as string) : null;
+      const wEnd = r.wifiEndAt ? new Date(r.wifiEndAt as string) : null;
       const wifiAllowed =
         r.status === 'APPROVED' &&
         hasCheckedIn &&
-        r.wifiStartAt &&
-        r.wifiEndAt &&
-        now >= r.wifiStartAt &&
-        now <= r.wifiEndAt;
+        wStart &&
+        wEnd &&
+        !isNaN(wStart.getTime()) &&
+        !isNaN(wEnd.getTime()) &&
+        now >= wStart &&
+        now <= wEnd;
 
       return {
         id: r.id,
@@ -58,8 +84,8 @@ export async function GET() {
         wifiSsid: wifiAllowed ? r.wifiSsid : null,
         wifiPassword: wifiAllowed ? r.wifiPassword : null,
         wifiWindow: wifiAllowed ? { startAt: r.wifiStartAt, endAt: r.wifiEndAt } : null,
-        checkedInAt: r.checkIn?.checkedInAt ?? null,
-        checkedOutAt: r.checkIn?.checkedOutAt ?? null,
+        checkedInAt: checkIn?.checkedInAt ?? null,
+        checkedOutAt: checkIn?.checkedOutAt ?? null,
       };
     });
 

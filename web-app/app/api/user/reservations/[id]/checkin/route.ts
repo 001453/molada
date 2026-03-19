@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin, newDbId, nowIso } from '@/lib/supabaseAdmin';
 import { safeJsonError, USER_COOKIE, verifyJwt } from '@/lib/auth';
 
 export async function POST(
@@ -7,6 +7,7 @@ export async function POST(
   context: { params: { id: string } }
 ) {
   try {
+    const supabase = getSupabaseAdmin();
     const jar = cookies();
     const token = jar.get(USER_COOKIE)?.value;
     if (!token) return safeJsonError('Yetkisiz.', 401);
@@ -21,22 +22,38 @@ export async function POST(
 
     if (!code) return safeJsonError('Giriş kodu gerekli.', 400);
 
-    const reservation = await prisma.reservation.findUnique({
-      where: { id: reservationId },
-      include: { checkIn: true },
-    });
+    const { data: reservation, error: rErr } = await supabase
+      .from('Reservation')
+      .select('*')
+      .eq('id', reservationId)
+      .maybeSingle();
 
-    if (!reservation || reservation.userId !== userId) return safeJsonError('Rezervasyon bulunamadı.', 404);
+    if (rErr || !reservation || reservation.userId !== userId) {
+      return safeJsonError('Rezervasyon bulunamadı.', 404);
+    }
     if (reservation.status !== 'APPROVED') return safeJsonError('Rezervasyon onaylı değil.', 403);
-    if (!reservation.checkInCode || reservation.checkInCode !== code) return safeJsonError('Kod hatalı.', 403);
-    if (reservation.checkIn) return safeJsonError('Zaten giriş yapılmış.', 409);
+    if (!reservation.checkInCode || reservation.checkInCode !== code) {
+      return safeJsonError('Kod hatalı.', 403);
+    }
 
-    await prisma.checkIn.create({
-      data: {
-        reservationId: reservation.id,
-        codeValidatedAt: new Date(),
-      },
+    const { data: existingCheckIn } = await supabase
+      .from('CheckIn')
+      .select('id')
+      .eq('reservationId', reservationId)
+      .maybeSingle();
+
+    if (existingCheckIn) return safeJsonError('Zaten giriş yapılmış.', 409);
+
+    const { error: insErr } = await supabase.from('CheckIn').insert({
+      id: newDbId(),
+      reservationId: reservation.id,
+      codeValidatedAt: nowIso(),
     });
+
+    if (insErr) {
+      console.error('checkin insert:', insErr);
+      return safeJsonError('Giriş yapılamadı.', 500);
+    }
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
@@ -46,4 +63,3 @@ export async function POST(
     return safeJsonError('Giriş yapılamadı.', 500);
   }
 }
-

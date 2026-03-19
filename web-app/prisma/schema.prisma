@@ -4,9 +4,9 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  // Uygulama (Netlify): Session pooler URL
+  // Uygulama (Netlify/serverless): Transaction pooler :6543 + ?pgbouncer=true (Supabase Prisma rehberi)
   url       = env("DATABASE_URL")
-  // Prisma migrate / db push: doğrudan Postgres (pooler "circuit breaker" hatasını önler)
+  // migrate / prisma db * : Session pooler :5432 veya db.*.supabase.co doğrudan
   directUrl = env("DIRECT_URL")
 }
 

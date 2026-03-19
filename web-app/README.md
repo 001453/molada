@@ -32,11 +32,15 @@ Tarayıcıda [http://localhost:3000](http://localhost:3000) açılır.
 
 `.env.example` dosyasını `.env.local` olarak kopyalayıp doldurun:
 
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase proje URL’si (Dashboard → Settings → API)
+- `SUPABASE_SERVICE_ROLE_KEY` — **Sadece sunucu (API routes)**; tarayıcıya asla vermeyin. Netlify’da Environment variable olarak ekleyin.
 - `NEXT_PUBLIC_ADDRESS` — Tam adres (cadde, no, semt / İstanbul)
 - `NEXT_PUBLIC_PHONE` — Telefon
 - `NEXT_PUBLIC_EMAIL` — E-posta
 - `NEXT_PUBLIC_WHATSAPP` — WhatsApp numarası (örn. 905321234567, başında + yok)
 - `NEXT_PUBLIC_MAP_URL` — Google Maps veya harita linki
+- `AUTH_SECRET`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `WIFI_SSID` — uygulama ve admin girişi için
+- `DATABASE_URL` / `DIRECT_URL` — yalnızca lokal `npx prisma migrate` vb. için (üretim API’leri Supabase HTTP kullanır)
 
 Bu değerler yoksa `lib/site.ts` içindeki placeholder’lar kullanılır.
 

@@ -1,18 +1,24 @@
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
-import { prisma } from '@/lib/prisma';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { safeJsonError, signUserJwt, USER_COOKIE } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
+    const supabase = getSupabaseAdmin();
     const body = await request.json();
     const email = String(body?.email ?? '').trim().toLowerCase();
     const password = String(body?.password ?? '');
 
     if (!email || !password) return safeJsonError('E-posta ve şifre gerekli.', 400);
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return safeJsonError('Hatalı giriş.', 401);
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('id, passwordHash, status, name, plan')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error || !user) return safeJsonError('Hatalı giriş.', 401);
 
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return safeJsonError('Hatalı giriş.', 401);
