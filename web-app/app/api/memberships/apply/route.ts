@@ -38,7 +38,16 @@ export async function POST(request: Request) {
       headers: { 'content-type': 'application/json; charset=utf-8' },
     });
   } catch (e) {
-    return safeJsonError('Başvuru alınamadı.', 500);
+    // Debug: Netlify üzerinde gerçek hatayı görebilmek için hata mesajını döndürüyoruz.
+    // Güvenlik: DATABASE_URL içindeki şifre gibi parçaları maskeleyelim.
+    // Not: Bu mesajı ürün ortamında kapatmak isteyebiliriz.
+    console.error('memberships/apply error:', e);
+    const rawMessage = e instanceof Error ? e.message : 'Başvuru alınamadı.';
+    const sanitizedMessage = rawMessage.replace(
+      /postgres(?:ql)?:\/\/([^:]+):([^@]+)@/i,
+      'postgresql://$1:***@'
+    );
+    return safeJsonError(sanitizedMessage, 500);
   }
 }
 
