@@ -1,0 +1,10 @@
+{
+  "name": "Molada Paylaşımlı Ofis",
+  "short_name": "Molada",
+  "description": "Mahallenizin ofisi — cadde üstü paylaşımlı ofis",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060607",
+  "theme_color": "#060607",
+  "lang": "tr"
+}

@@ -1,0 +1,15 @@
+# Node / Next
+**/node_modules/
+**/.next/
+
+# Env files (secrets)
+**/.env
+**/.env.*
+
+# SQLite dev database
+**/dev.db
+
+# Cursor / editor
+.idea/
+.vscode/
+

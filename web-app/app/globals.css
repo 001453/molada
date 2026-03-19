@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* g-athletics-mvp palette: https://github.com/001453/g-athletics-mvp */
+:root {
+  --background: #060607;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --accent: #d8ff3f;
+  --accent-2: #8b5cf6;
+  /* derived */
+  --bg: var(--background);
+  --text: var(--foreground);
+  --text-secondary: var(--muted);
+  --surface: var(--background);
+  --surface-foreground: var(--foreground);
+  --border: var(--card-border);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --accent-soft: rgba(216, 255, 63, 0.12);
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --transition: 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(216, 255, 63, 0.35);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: #e5ff5c;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header */
+header {
+  background: var(--surface);
+  color: var(--surface-foreground);
+  padding: 0.9rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--card-border);
+}
+
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+header a {
+  color: inherit;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+  transition: opacity var(--transition);
+}
+
+.logo:hover {
+  opacity: 0.9;
+  color: var(--accent);
+}
+
+.nav {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+main {
+  min-height: calc(100vh - 200px);
+  padding: 0 0 3rem;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(180deg, var(--background) 0%, rgba(6, 6, 7, 0.97) 50%, rgba(139, 92, 246, 0.08) 100%);
+  color: var(--foreground);
+  padding: 3rem 0 3.5rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.hero .tagline {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 42ch;
+  margin: 0 auto 1rem;
+  line-height: 1.6;
+}
+
+.hero .location-badge {
+  display: inline-block;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--card-border);
+  margin-bottom: 1.25rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  backdrop-filter: blur(8px);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.card h2 {
+  margin-top: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+  color: var(--foreground);
+}
+
+/* Typography */
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+  color: var(--text);
+}
+
+h2:first-child {
+  margin-top: 0;
+}
+
+p {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.4rem;
+  background: var(--accent);
+  color: #060607 !important;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), transform 0.15s ease, box-shadow var(--transition);
+  box-shadow: 0 2px 12px rgba(216, 255, 63, 0.25);
+}
+
+.btn:hover {
+  background: #e5ff5c;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(216, 255, 63, 0.35);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--card);
+  color: var(--foreground) !important;
+  border: 1px solid var(--card-border);
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-strong);
+  color: var(--foreground) !important;
+}
+
+/* List */
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.65rem;
+  color: var(--text-secondary);
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Footer */
+footer {
+  background: var(--surface);
+  color: var(--surface-foreground);
+  padding: 1.5rem 0;
+  margin-top: auto;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--card-border);
+}
+
+footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+footer a {
+  color: var(--muted);
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+/* Page content wrapper */
+.page-content {
+  padding: 0 0 2rem;
+}
+
+/* CTA strip */
+.cta-strip {
+  background: rgba(216, 255, 63, 0.08);
+  border: 1px solid rgba(216, 255, 63, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.cta-strip .btn {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .nav {
+    gap: 1.25rem;
+  }
+  .hero {
+    padding: 2.25rem 0 2.75rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 1.25rem 1.5rem;
+  }
+}

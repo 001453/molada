@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  name         String
+  email        String        @unique
+  phone        String
+  passwordHash String
+  status       UserStatus    @default(PENDING)
+  plan         String?
+  notes        String?
+  approvedAt   DateTime?
+  rejectedAt   DateTime?
+
+  // WiFi erişimi: Onaylanan kullanıcılar için yönetim tarafından verilen şifre
+  wifiSsid     String?
+  wifiPassword String?
+  wifiStartAt  DateTime?
+  wifiEndAt    DateTime?
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id           String            @id @default(cuid())
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  userId       String
+  resourceType ResourceType
+  cabinNumber  Int?
+  startAt      DateTime
+  endAt        DateTime
+  status       ReservationStatus @default(PENDING)
+  adminNote    String?
+  checkInCode  String?
+  wifiSsid     String?
+  wifiPassword String?
+  wifiStartAt  DateTime?
+  wifiEndAt    DateTime?
+  checkIn      CheckIn?
+  user         User              @relation(fields: [userId], references: [id])
+}
+
+model CheckIn {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  reservationId   String      @unique
+  codeValidatedAt DateTime?
+  checkedInAt     DateTime    @default(now())
+  checkedOutAt    DateTime?
+  reservation     Reservation @relation(fields: [reservationId], references: [id])
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ReservationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELED
+}
+
+enum ResourceType {
+  MEETING_ROOM
+  SILENT_CABIN
+}

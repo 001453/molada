@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN "wifiEndAt" DATETIME;
+ALTER TABLE "User" ADD COLUMN "wifiPassword" TEXT;
+ALTER TABLE "User" ADD COLUMN "wifiSsid" TEXT;
+ALTER TABLE "User" ADD COLUMN "wifiStartAt" DATETIME;
