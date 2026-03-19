@@ -1,0 +1,8 @@
+[[plugins]]
+package = "@netlify/plugin-nextjs"
+
+[build]
+# Repo kökü içinde monorepo var; Next.js projesi `web-app/` altında.
+command = "npm --prefix web-app install && npm --prefix web-app run build"
+publish = "web-app/.next"
+
