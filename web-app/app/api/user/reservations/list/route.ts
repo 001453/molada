@@ -37,7 +37,7 @@ export async function GET() {
       ? { wifiSsid: user.wifiSsid, wifiPassword: user.wifiPassword }
       : { wifiSsid: null, wifiPassword: null };
 
-    const mapped = reservations.map((r) => {
+    const mapped = reservations.map((r: (typeof reservations)[number]) => {
       const hasCheckedIn = !!r.checkIn;
       const wifiAllowed =
         r.status === 'APPROVED' &&
