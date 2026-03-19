@@ -10,8 +10,12 @@ export async function POST(request: Request) {
     const email = String(body?.email ?? '').trim().toLowerCase();
     const phone = String(body?.phone ?? '').trim();
     const password = String(body?.password ?? '');
-    const plan = body?.plan ? String(body.plan) : null;
-    const notes = body?.notes ? String(body.notes) : null;
+    const plan = body?.plan ? String(body.plan).slice(0, 120) : null;
+    const notes = body?.notes ? String(body.notes).slice(0, 2000) : null;
+
+    if (name.length > 120 || email.length > 254 || phone.length > 40) {
+      return safeJsonError('Girilen bilgiler çok uzun.', 400);
+    }
 
     if (!name || !email || !phone || password.length < 6) {
       return safeJsonError('Eksik veya geçersiz bilgiler. Şifre en az 6 karakter olmalı.', 400);
@@ -49,11 +53,8 @@ export async function POST(request: Request) {
       headers: { 'content-type': 'application/json; charset=utf-8' },
     });
   } catch (e) {
+    // Ayrıntı istemciye verilmez (bilgi sızıntısı / fingerprinting önlemi).
     console.error('memberships/apply error:', e);
-    const msg = e instanceof Error ? e.message : '';
-    if (msg.includes('SUPABASE') || msg.includes('Supabase')) {
-      return safeJsonError('Sunucu yapılandırması eksik (Supabase).', 500);
-    }
     return safeJsonError('Başvuru alınamadı.', 500);
   }
 }

@@ -44,6 +44,8 @@ Tarayıcıda [http://localhost:3000](http://localhost:3000) açılır.
 
 Bu değerler yoksa `lib/site.ts` içindeki placeholder’lar kullanılır.
 
+Üretim öncesi: **`SECURITY.md`** (anahtarlar, kontrol listesi).
+
 ---
 
 ## Vercel’e deploy
