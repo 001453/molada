@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { MEMBERSHIP_HIGHLIGHTS, MOLADA_AMENITIES } from '@/lib/amenities';
 import { site } from '@/lib/site';
 
 export default function HomePage() {
@@ -16,10 +18,49 @@ export default function HomePage() {
             {site.description}
           </p>
           <span className="location-badge">📍 Üsküdar – Çengelköy – Beylerbeyi · Cadde üstü</span>
+          <div className="hero-actions">
+            <Link href="/uyelik-basvuru" className="btn">
+              Üyelik başvurusu
+            </Link>
+            <Link href="/iletisim#geri-donus" className="btn btn-secondary">
+              Bizi arayın — geri dönüş
+            </Link>
+          </div>
         </div>
       </section>
 
       <div className="container page-content">
+        <section className="card">
+          <h2>Üyelik modelleri</h2>
+          <p style={{ marginBottom: 0 }}>
+            İhtiyacınıza göre açık çalışma, toplantı &amp; kabin veya sanal ofis — detaylar için fiyat ve başvuru sayfalarına gidin.
+          </p>
+          <div className="membership-grid">
+            {MEMBERSHIP_HIGHLIGHTS.map((m) => (
+              <Link key={m.title} href={m.href} className="membership-card">
+                <h3>{m.title}</h3>
+                <p>{m.subtitle}</p>
+                <span className="membership-cta">{m.cta} →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="card">
+          <h2>Molada’da standart</h2>
+          <p style={{ marginBottom: 0 }}>
+            Paylaşımlı ofiste günlük deneyimi kolaylaştıran hizmetler — kampüs ölçeği iddiası olmadan, şeffaf liste.
+          </p>
+          <div className="services-grid">
+            {MOLADA_AMENITIES.map((a) => (
+              <div key={a.title} className="service-card">
+                <h3>{a.title}</h3>
+                <p>{a.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="card">
           <h2>Neler sunuyoruz?</h2>
           <ul className="feature-list">
