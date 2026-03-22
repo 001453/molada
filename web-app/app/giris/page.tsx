@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { MEMBERSHIP_PLAN_OPTIONS } from '@/lib/coworking';
 
 export default function GirisPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function GirisPage() {
   const [appName, setAppName] = useState('');
   const [appEmail, setAppEmail] = useState('');
   const [appPhone, setAppPhone] = useState('');
-  const [appPlan, setAppPlan] = useState('Sıcak masa');
+  const [appPlan, setAppPlan] = useState<string>(MEMBERSHIP_PLAN_OPTIONS[0]);
   const [appPassword, setAppPassword] = useState('');
   const [appNotes, setAppNotes] = useState('');
 
@@ -159,9 +160,11 @@ export default function GirisPage() {
                 onChange={(e) => setAppPlan(e.target.value)}
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.04)', color: 'var(--foreground)' }}
               >
-                <option>Sıcak masa</option>
-                <option>Sabit masa</option>
-                <option>Sanal ofis</option>
+                {MEMBERSHIP_PLAN_OPTIONS.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
               </select>
             </label>
             <label>

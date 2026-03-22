@@ -39,6 +39,8 @@ model Reservation {
   updatedAt    DateTime          @updatedAt
   userId       String
   resourceType ResourceType
+  /// Toplantı odası: 1=A(4 kişi), 2=B(6), 3=C(12). Sessiz kabinde null.
+  meetingRoomId Int?
   cabinNumber  Int?
   startAt      DateTime
   endAt        DateTime

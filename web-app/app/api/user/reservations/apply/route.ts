@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { MEETING_ROOMS, SILENT_CABIN_COUNT } from '@/lib/coworking';
 import { getSupabaseAdmin, newDbId, nowIso } from '@/lib/supabaseAdmin';
 import { safeJsonError, USER_COOKIE, verifyJwt } from '@/lib/auth';
 
@@ -29,14 +30,24 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const resourceType = String(body?.resourceType ?? '') as 'MEETING_ROOM' | 'SILENT_CABIN';
+    const meetingRoomId =
+      body?.meetingRoomId !== undefined && body?.meetingRoomId !== null ? Number(body.meetingRoomId) : null;
     const cabinNumber = body?.cabinNumber !== undefined && body?.cabinNumber !== null ? Number(body.cabinNumber) : null;
     const date = String(body?.date ?? '');
     const startTime = String(body?.startTime ?? '');
     const endTime = String(body?.endTime ?? '');
 
     if (!resourceType || !date || !startTime || !endTime) return safeJsonError('Tüm alanları doldurun.', 400);
-    if (resourceType === 'SILENT_CABIN' && (!cabinNumber || cabinNumber < 1 || cabinNumber > 5)) {
-      return safeJsonError('Sessiz kabin için 1-5 arası kabin numarası seçin.', 400);
+
+    if (resourceType === 'MEETING_ROOM') {
+      const validRoom = MEETING_ROOMS.some((r) => r.id === meetingRoomId);
+      if (!meetingRoomId || !validRoom) {
+        return safeJsonError('Geçerli bir toplantı odası seçin.', 400);
+      }
+    }
+
+    if (resourceType === 'SILENT_CABIN' && (!cabinNumber || cabinNumber < 1 || cabinNumber > SILENT_CABIN_COUNT)) {
+      return safeJsonError(`Sessiz kabin için 1-${SILENT_CABIN_COUNT} arası numara seçin.`, 400);
     }
 
     const startAt = parseDateTime(date, startTime);
@@ -57,10 +68,11 @@ export async function POST(request: Request) {
       .gt('endAt', startIso)
       .eq('resourceType', resourceType);
 
-    overlapQuery =
-      resourceType === 'SILENT_CABIN'
-        ? overlapQuery.eq('cabinNumber', cabinNumber as number)
-        : overlapQuery.is('cabinNumber', null);
+    if (resourceType === 'SILENT_CABIN') {
+      overlapQuery = overlapQuery.eq('cabinNumber', cabinNumber as number).is('meetingRoomId', null);
+    } else {
+      overlapQuery = overlapQuery.eq('meetingRoomId', meetingRoomId as number).is('cabinNumber', null);
+    }
 
     const { data: overlapRows, error: overlapErr } = await overlapQuery.limit(1);
 
@@ -79,6 +91,7 @@ export async function POST(request: Request) {
       updatedAt: t,
       userId: user.id,
       resourceType,
+      meetingRoomId: resourceType === 'MEETING_ROOM' ? meetingRoomId : null,
       cabinNumber: resourceType === 'SILENT_CABIN' ? cabinNumber : null,
       startAt: startIso,
       endAt: endIso,

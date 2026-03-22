@@ -1,12 +1,19 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import {
+  MEETING_ROOMS,
+  SILENT_CABIN_COUNT,
+  formatReservationResource,
+  reservationStatusTr,
+} from '@/lib/coworking';
 
 type ResourceType = 'MEETING_ROOM' | 'SILENT_CABIN';
 
 type ReservationItem = {
   id: string;
   resourceType: ResourceType;
+  meetingRoomId: number | null;
   cabinNumber: number | null;
   startAt: string;
   endAt: string;
@@ -26,6 +33,7 @@ export default function UyePaneliPage() {
   const [reservations, setReservations] = useState<ReservationItem[]>([]);
 
   const [resourceType, setResourceType] = useState<ResourceType>('MEETING_ROOM');
+  const [meetingRoomId, setMeetingRoomId] = useState<number>(MEETING_ROOMS[0].id);
   const [cabinNumber, setCabinNumber] = useState<number>(1);
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
@@ -64,6 +72,7 @@ export default function UyePaneliPage() {
     try {
       const payload = {
         resourceType,
+        meetingRoomId: resourceType === 'MEETING_ROOM' ? meetingRoomId : null,
         cabinNumber: resourceType === 'SILENT_CABIN' ? cabinNumber : null,
         date,
         startTime,
@@ -164,20 +173,37 @@ export default function UyePaneliPage() {
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.04)', color: 'var(--foreground)' }}
                 disabled={!canRequestReservation}
               >
-                <option value="MEETING_ROOM">Toplantı odası (16 kişi)</option>
+                <option value="MEETING_ROOM">Toplantı odası</option>
                 <option value="SILENT_CABIN">Sessiz kabin (1 kişi)</option>
               </select>
             </label>
 
+            {resourceType === 'MEETING_ROOM' && (
+              <label>
+                <div>Toplantı odası seçin</div>
+                <select
+                  value={meetingRoomId}
+                  onChange={(e) => setMeetingRoomId(Number(e.target.value))}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.04)', color: 'var(--foreground)' }}
+                >
+                  {MEETING_ROOMS.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.labelTr}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
             {resourceType === 'SILENT_CABIN' && (
               <label>
-                <div>Sessiz kabin no (1-5)</div>
+                <div>Sessiz kabin no (1–{SILENT_CABIN_COUNT})</div>
                 <select
                   value={cabinNumber}
                   onChange={(e) => setCabinNumber(Number(e.target.value))}
                   style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.04)', color: 'var(--foreground)' }}
                 >
-                  {[1, 2, 3, 4, 5].map((n) => (
+                  {Array.from({ length: SILENT_CABIN_COUNT }, (_, i) => i + 1).map((n) => (
                     <option key={n} value={n}>
                       {n}
                     </option>
@@ -254,13 +280,13 @@ export default function UyePaneliPage() {
                   return (
                     <tr key={r.id}>
                       <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                        {r.resourceType === 'MEETING_ROOM' ? 'Toplantı odası' : `Sessiz kabin #${r.cabinNumber}`}
+                        {formatReservationResource(r.resourceType, r.cabinNumber, r.meetingRoomId)}
                       </td>
                       <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         {fmt(r.startAt)} - {fmt(r.endAt)}
                       </td>
                       <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                        {r.status}
+                        {reservationStatusTr[r.status] ?? r.status}
                       </td>
                       <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         {r.wifiPassword ? (

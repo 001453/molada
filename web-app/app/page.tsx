@@ -23,11 +23,11 @@ export default function HomePage() {
         <section className="card">
           <h2>Neler sunuyoruz?</h2>
           <ul className="feature-list">
-            <li>Açık çalışma alanı (sıcak masa / sabit masa)</li>
-            <li>Toplantı odası (16 kişi)</li>
-            <li>Sessiz kabinler (5 adet)</li>
+            <li>Açık çalışma alanı — sıcak / sabit masa (yaklaşık 45 kişi kapasite)</li>
+            <li>Üç toplantı odası — 4, 6 ve 12 kişilik (saatlik rezervasyon, üye paneli)</li>
+            <li>Beş sessiz kabin — tek kişilik odak alanı</li>
             <li>Çay-kahve ve dinlenme alanı</li>
-            <li>Sanal ofis (adres, posta, sekreterya)</li>
+            <li>Sanal ofis — iş adresi, posta, sekreterya (sözleşmeye tabi)</li>
           </ul>
         </section>
 
@@ -43,19 +43,30 @@ export default function HomePage() {
         </section>
 
         <section className="card cta-strip">
-          <h2>Hemen iletişime geçin</h2>
-          <p>Fiyatlar ve rezervasyon için bize ulaşın.</p>
+          <h2>Üyelik ve rezervasyon akışı</h2>
           <p>
-            <a href={`mailto:${site.email}`} className="btn">
+            <strong>1)</strong> Üyelik başvurusu → <strong>2)</strong> onay → <strong>3)</strong> giriş ile üye panelinden toplantı / kabin talebi →{' '}
+            <strong>4)</strong> onay sonrası giriş kodu ve Wi‑Fi. Fiyat ve özel talepler için iletişim.
+          </p>
+          <p style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <a href="/uyelik-basvuru" className="btn">
+              Üyelik başvurusu
+            </a>
+            <a href="/giris" className="btn btn-secondary">
+              Üye girişi
+            </a>
+            <a href={`mailto:${site.email}`} className="btn btn-secondary">
               E-posta
             </a>
             {whatsappLink && (
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn">
-                WhatsApp ile yazın
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                WhatsApp
               </a>
             )}
             {!whatsappLink && (
-              <a href="/iletisim" className="btn">İletişim</a>
+              <a href="/iletisim" className="btn btn-secondary">
+                İletişim
+              </a>
             )}
           </p>
         </section>

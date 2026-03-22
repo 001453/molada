@@ -6,7 +6,8 @@
 export const site = {
   name: 'Molada',
   tagline: 'Mahallenizin ofisi',
-  description: 'Cadde üstünde, 400 m² paylaşımlı ofis — açık çalışma alanı, toplantı odası, sessiz kabinler ve çay-kahve alanı. Üsküdar–Çengelköy–Beylerbeyi hattında, toplu taşıma ile tek vasıta.',
+  description:
+    'Cadde üstünde, 400 m² paylaşımlı ofis — açık çalışma alanı (~45 kişi), 3 toplantı odası (4 / 6 / 12 kişi), sessiz kabinler ve çay-kahve. Üsküdar–Çengelköy–Beylerbeyi hattında, toplu taşıma ile tek vasıta.',
   address: process.env.NEXT_PUBLIC_ADDRESS || '__________ Cad. No: __, __________ / İstanbul',
   phone: process.env.NEXT_PUBLIC_PHONE || '+90 (___) ___ __ __',
   email: process.env.NEXT_PUBLIC_EMAIL || 'info@example.com',
@@ -20,6 +21,8 @@ export const nav = [
   { href: '/', label: 'Ana Sayfa' },
   { href: '/fiyat', label: 'Fiyatlar' },
   { href: '/mekan', label: 'Mekân' },
+  { href: '/uyelik-basvuru', label: 'Üyelik' },
+  { href: '/uye-paneli', label: 'Üye paneli' },
   { href: '/iletisim', label: 'İletişim' },
   { href: '/kvkk', label: 'KVKK' },
   { href: '/giris', label: 'Giriş' },

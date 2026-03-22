@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { MEMBERSHIP_PLAN_OPTIONS } from '@/lib/coworking';
 
 export default function UYelikBasvuruPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [plan, setPlan] = useState('Sıcak masa');
+  const [plan, setPlan] = useState<string>(MEMBERSHIP_PLAN_OPTIONS[0]);
   const [password, setPassword] = useState('');
   const [notes, setNotes] = useState('');
 
@@ -83,9 +84,11 @@ export default function UYelikBasvuruPage() {
                 onChange={(e) => setPlan(e.target.value)}
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1px solid var(--card-border)', background: 'rgba(255,255,255,0.04)', color: 'var(--foreground)' }}
               >
-                <option>Sıcak masa</option>
-                <option>Sabit masa</option>
-                <option>Sanal ofis</option>
+                {MEMBERSHIP_PLAN_OPTIONS.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
               </select>
             </label>
             <label>

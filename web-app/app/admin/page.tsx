@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { formatReservationResource, reservationStatusTr } from '@/lib/coworking';
 
 type PendingUser = {
   id: string;
@@ -8,12 +9,14 @@ type PendingUser = {
   email: string;
   phone: string;
   plan: string | null;
+  notes: string | null;
   createdAt: string;
 };
 
 type PendingReservation = {
   id: string;
   resourceType: 'MEETING_ROOM' | 'SILENT_CABIN';
+  meetingRoomId: number | null;
   cabinNumber: number | null;
   startAt: string;
   endAt: string;
@@ -157,6 +160,7 @@ export default function AdminPage() {
                   <tr>
                     <th style={{ textAlign: 'left', padding: '0.75rem', borderBottom: '1px solid var(--card-border)' }}>Kullanıcı</th>
                     <th style={{ textAlign: 'left', padding: '0.75rem', borderBottom: '1px solid var(--card-border)' }}>Plan</th>
+                    <th style={{ textAlign: 'left', padding: '0.75rem', borderBottom: '1px solid var(--card-border)' }}>Not</th>
                     <th style={{ textAlign: 'left', padding: '0.75rem', borderBottom: '1px solid var(--card-border)' }}>Tarih</th>
                     <th style={{ textAlign: 'left', padding: '0.75rem', borderBottom: '1px solid var(--card-border)' }}>İşlem</th>
                   </tr>
@@ -164,7 +168,7 @@ export default function AdminPage() {
                 <tbody>
                   {users.length === 0 ? (
                     <tr>
-                      <td colSpan={4} style={{ padding: '0.75rem', color: 'var(--muted)' }}>
+                      <td colSpan={5} style={{ padding: '0.75rem', color: 'var(--muted)' }}>
                         Bekleyen üyelik yok.
                       </td>
                     </tr>
@@ -174,9 +178,21 @@ export default function AdminPage() {
                         <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                           <div style={{ fontWeight: 700 }}>{u.name}</div>
                           <div style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{u.email}</div>
+                          <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{u.phone}</div>
                         </td>
                         <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                           {u.plan ?? '-'}
+                        </td>
+                        <td
+                          style={{
+                            padding: '0.75rem',
+                            borderBottom: '1px solid rgba(255,255,255,0.06)',
+                            maxWidth: 200,
+                            fontSize: '0.88rem',
+                            color: 'var(--muted)',
+                          }}
+                        >
+                          {u.notes ? u.notes.slice(0, 120) + (u.notes.length > 120 ? '…' : '') : '—'}
                         </td>
                         <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                           {fmt(u.createdAt)}
@@ -225,7 +241,7 @@ export default function AdminPage() {
                           <div style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{r.user.email}</div>
                         </td>
                         <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                          {r.resourceType === 'MEETING_ROOM' ? 'Toplantı odası' : `Sessiz kabin #${r.cabinNumber}`}
+                          {formatReservationResource(r.resourceType, r.cabinNumber, r.meetingRoomId)}
                         </td>
                         <td style={{ padding: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                           {fmt(r.startAt)} - {fmt(r.endAt)}

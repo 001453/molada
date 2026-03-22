@@ -14,12 +14,22 @@ export default function MekanPage() {
       </p>
 
       <section className="card">
+        <h2>Neden Molada? (değer önerisi)</h2>
+        <p style={{ marginTop: 0, color: 'var(--text-secondary)' }}>
+          Profesyonel çalışma ortamı ve mahalle içi erişilebilirlik; evden uzakta odaklanma, esnek üyelik ve ortak maliyetlerle klasik ofise göre daha verimli başlangıç.
+          Üye olduktan sonra panel üzerinden toplantı odası ve sessiz kabin talebi; onaylı rezervasyonlarda giriş kodu ile şeffaf kullanım.
+        </p>
+      </section>
+
+      <section className="card">
         <h2>Alanlar</h2>
         <ul className="feature-list">
-          <li><strong>Giriş ve resepsiyon</strong> — Turnike, kayıt, anahtar/kart</li>
-          <li><strong>Açık ofis</strong> — 45 masa (3 sıra x 15), sıcak ve sabit masa</li>
-          <li><strong>Toplantı odası</strong> — 16 kişi, ekran/projeksiyon</li>
-          <li><strong>Sessiz kabinler</strong> — 5 adet, tek kişilik</li>
+          <li><strong>Giriş ve resepsiyon</strong> — Kayıt, üyelik akışı, yönlendirme</li>
+          <li><strong>Açık ofis</strong> — Yaklaşık 45 kişi kapasite; sıcak ve sabit masa</li>
+          <li>
+            <strong>Toplantı odaları</strong> — Üç ayrı oda: 4, 6 ve 12 kişilik; ekran / projeksiyon; üye panelinden rezervasyon talebi
+          </li>
+          <li><strong>Sessiz kabinler</strong> — 5 adet, tek kişilik odak</li>
           <li><strong>Çay-kahve ve dinlenme</strong> — Ortak kullanım</li>
           <li><strong>WC</strong> — Yeterli kabin, engelli erişimi</li>
         </ul>
