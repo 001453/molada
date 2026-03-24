@@ -1,3 +1,4 @@
+import { LeadFormMailto } from '../components/LeadFormMailto';
 import { site } from '@/lib/site';
 
 export const metadata = {
@@ -49,8 +50,21 @@ export default function IletisimPage() {
       <section className="card">
         <h2>Rezervasyon</h2>
         <p>
-          Toplantı odası ve sessiz kabin rezervasyonu için e-posta, telefon veya WhatsApp üzerinden iletişime geçin. Rezervasyon talebiniz en kısa sürede yanıtlanacaktır.
+          <strong>Üyeler:</strong> Toplantı odası ve sessiz kabin için önce{' '}
+          <a href="/uye-paneli">üye panelinden</a> talep oluşturun. Onay sonrası giriş ve kullanım bilgisi paylaşılır.
         </p>
+        <p>
+          <strong>Henüz üye değilseniz:</strong> <a href="/uyelik-basvuru">Üyelik başvurusu</a> veya aşağıdaki form ile bize yazın; en kısa sürede dönüş yaparız.
+        </p>
+      </section>
+
+      <section className="card" id="geri-donus">
+        <h2>Biz sizi arayalım</h2>
+        <p>
+          Formu doldurup gönder’e bastığınızda e-posta uygulamanız açılır; mesajı göndererek talebinizi iletirsiniz. Aynı bilgileri doğrudan{' '}
+          <a href={`mailto:${site.email}`}>{site.email}</a> adresine de yazabilirsiniz.
+        </p>
+        <LeadFormMailto />
       </section>
     </div>
   );

@@ -325,6 +325,135 @@ footer a:hover {
   margin-bottom: 0.5rem;
 }
 
+/* Membership highlights */
+.membership-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.membership-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.membership-card:hover {
+  border-color: rgba(216, 255, 63, 0.35);
+  box-shadow: var(--shadow-md);
+}
+
+.membership-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.membership-card p {
+  margin: 0;
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.membership-card .membership-cta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Services grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.service-card {
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.service-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.service-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* Lead form */
+.lead-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.lead-form label span {
+  font-weight: 500;
+}
+
+.lead-form input,
+.lead-form select,
+.lead-form textarea {
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.lead-form textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.lead-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lead-form-full {
+  grid-column: 1 / -1;
+}
+
+.lead-form-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
 @media (max-width: 640px) {
   .nav {
     gap: 1.25rem;
@@ -337,5 +466,8 @@ footer a:hover {
   }
   .card {
     padding: 1.25rem 1.5rem;
+  }
+  .lead-form-grid {
+    grid-template-columns: 1fr;
   }
 }
