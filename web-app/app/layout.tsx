@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SiteJsonLd } from '@/app/components/SiteJsonLd';
 import { site, nav } from '@/lib/site';
 import './globals.css';
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body>
+        <SiteJsonLd />
         <header>
           <div className="container">
             <a href="/" className="logo" aria-label={`${site.name} ana sayfa`}>
@@ -38,9 +40,15 @@ export default function RootLayout({
         <footer>
           <div className="container">
             <span>© {new Date().getFullYear()} {site.name}. Tüm hakları saklıdır.</span>
-            <span>
+            <span style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', alignItems: 'center' }}>
+              <a href="/topluluk">Topluluk</a>
+              <span aria-hidden>·</span>
+              <a href="/isletme-rehberi">İşletme rehberi</a>
+              <span aria-hidden>·</span>
+              <a href="/sss">SSS</a>
+              <span aria-hidden>·</span>
               <a href="/iletisim">İletişim</a>
-              {' · '}
+              <span aria-hidden>·</span>
               <a href="/kvkk">KVKK</a>
             </span>
           </div>

@@ -471,3 +471,19 @@ footer a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Admin: hukuk özeti yazdırırken site başlık/altbilgi gizlensin */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body main {
+    padding-top: 0 !important;
+  }
+  .admin-print-area .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

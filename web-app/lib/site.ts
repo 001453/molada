@@ -21,9 +21,12 @@ export const nav = [
   { href: '/', label: 'Ana Sayfa' },
   { href: '/fiyat', label: 'Fiyatlar' },
   { href: '/mekan', label: 'Mekân' },
+  { href: '/topluluk', label: 'Topluluk' },
+  { href: '/isletme-rehberi', label: 'İşletme rehberi' },
   { href: '/uyelik-basvuru', label: 'Üyelik' },
   { href: '/uye-paneli', label: 'Üye paneli' },
   { href: '/iletisim', label: 'İletişim' },
+  { href: '/sss', label: 'SSS' },
   { href: '/kvkk', label: 'KVKK' },
   { href: '/giris', label: 'Giriş' },
 ] as const;

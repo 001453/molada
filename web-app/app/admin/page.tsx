@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { formatReservationResource, reservationStatusTr } from '@/lib/coworking';
+import { AdminLegalPrintPack } from '@/app/components/admin/AdminLegalPrintPack';
+import { AdminEventPlaybook } from '@/app/components/admin/AdminEventPlaybook';
+import { AdminReviewQueue } from '@/app/components/admin/AdminReviewQueue';
+import { formatReservationResource } from '@/lib/coworking';
 
 type PendingUser = {
   id: string;
@@ -25,7 +28,7 @@ type PendingReservation = {
 };
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<'users' | 'reservations'>('users');
+  const [tab, setTab] = useState<'users' | 'reservations' | 'legal' | 'review' | 'playbook'>('users');
   const [users, setUsers] = useState<PendingUser[]>([]);
   const [reservations, setReservations] = useState<PendingReservation[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -117,10 +120,10 @@ export default function AdminPage() {
 
   return (
     <div className="container page-content">
-      <h1 style={{ marginTop: 0 }}>Admin Paneli</h1>
+      <h1 className="no-print" style={{ marginTop: 0 }}>Admin Paneli</h1>
 
       {error && (
-        <section className="card">
+        <section className="card no-print">
           <p style={{ margin: 0, color: '#ff6b6b' }}>{error}</p>
           <p style={{ marginBottom: 0 }}>
             Admin login: <a href="/admin/login">/admin/login</a>
@@ -132,7 +135,7 @@ export default function AdminPage() {
         <section className="card">Yükleniyor...</section>
       ) : (
         <section className="card">
-          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+          <div className="no-print" style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
             <button
               className="btn btn-secondary"
               type="button"
@@ -149,9 +152,65 @@ export default function AdminPage() {
             >
               Rezervasyon Onayı
             </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setTab('legal')}
+              style={{ opacity: tab === 'legal' ? 1 : 0.7 }}
+            >
+              Hukuk — kağıt özeti
+            </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setTab('review')}
+              style={{ opacity: tab === 'review' ? 1 : 0.7 }}
+            >
+              İnceleme / event notları
+            </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setTab('playbook')}
+              style={{ opacity: tab === 'playbook' ? 1 : 0.7 }}
+            >
+              Etkinlik playbook
+            </button>
           </div>
 
-          {info && <p style={{ color: 'var(--accent)', marginTop: 0 }}>{info}</p>}
+          {info && (
+            <p className="no-print" style={{ color: 'var(--accent)', marginTop: 0 }}>
+              {info}
+            </p>
+          )}
+
+          {tab === 'legal' && (
+            <div className="no-print" style={{ marginBottom: '1rem' }}>
+              <button className="btn" type="button" onClick={() => window.print()}>
+                Bu özeti yazdır (PDF / kağıt)
+              </button>
+              <p style={{ margin: '0.65rem 0 0', fontSize: '0.88rem', color: 'var(--muted)' }}>
+                Yazdırmada üst menü ve altbilgi gizlenir. Üyeye imzalatacağınız asıl belgeler avukatınızın şablonlarıdır.
+              </p>
+            </div>
+          )}
+
+          {tab === 'legal' && <AdminLegalPrintPack />}
+
+          {tab === 'review' && <AdminReviewQueue />}
+
+          {tab === 'playbook' && (
+            <div className="no-print" style={{ marginBottom: '1rem' }}>
+              <button className="btn" type="button" onClick={() => window.print()}>
+                Playbook yazdır
+              </button>
+              <p style={{ margin: '0.65rem 0 0', fontSize: '0.88rem', color: 'var(--muted)' }}>
+                Kategorileri acip yazdirin; tarayici baskida ust/alt bilgi gizlenir.
+              </p>
+            </div>
+          )}
+
+          {tab === 'playbook' && <AdminEventPlaybook />}
 
           {tab === 'users' && (
             <div style={{ overflowX: 'auto' }}>
