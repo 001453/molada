@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alt Kat Kat Planı — 400 m² Açık Ofis (Sürüklenebilir)</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 16px; background: #f5f5f5; }
+    h1 { font-size: 1.1rem; color: #333; }
+    .plan { background: #fff; border: 1px solid #ccc; border-radius: 8px; padding: 16px; overflow: auto; }
+    svg { display: block; }
+    .legend { margin-top: 12px; font-size: 0.85rem; color: #555; }
+    .legend span { display: inline-block; width: 14px; height: 14px; vertical-align: middle; margin-right: 4px; border: 1px solid #333; }
+    .controls { margin: 12px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .controls button { padding: 8px 14px; cursor: pointer; border-radius: 6px; border: 1px solid #333; background: #fff; }
+    .controls button:hover { background: #e0e0e0; }
+    .controls button.save { background: #b8d4e3; }
+    .controls button.export { background: #d8e6d4; }
+    .controls label { font-size: 0.9rem; color: #555; }
+    .draggable { cursor: move; }
+    .draggable:hover { opacity: 0.95; }
+    #codeOut { width: 100%; height: 120px; font-family: monospace; font-size: 11px; margin-top: 8px; padding: 8px; border: 1px solid #ccc; display: none; }
+  </style>
+</head>
+<body>
+  <h1>Alt kat — 400 m² açık ofis (ilk faz) — şematik plan</h1>
+  <p style="font-size:0.9rem;color:#666;">Çizimleri sürükleyerek yerleştirin. "Pozisyonları kaydet" ile tarayıcıda saklanır; "Güncel HTML kodu" ile dosyayı güncelleyebilirsiniz.</p>
+  <div class="controls">
+    <button class="save" onclick="savePositions()">Pozisyonları kaydet</button>
+    <button class="export" onclick="exportHtml()">Pozisyon listesi (kopyala)</button>
+    <button class="export" onclick="exportFullHtml()">Tam HTML — dosyaya yapıştır</button>
+    <button onclick="resetPositions()">Sıfırla</button>
+    <label id="status"></label>
+  </div>
+  <textarea id="codeOut" readonly placeholder="Güncel kod burada görünecek..."></textarea>
+  <div class="plan">
+    <svg id="svgPlan" width="900" height="520" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dış çerçeve (sürüklenmez) -->
+      <rect x="40" y="40" width="820" height="440" fill="#e8f4f8" stroke="#333" stroke-width="2"/>
+      <!-- Yangın çıkışı -->
+      <g id="zone-yangin" class="draggable" transform="translate(393, 438)">
+        <rect x="0" y="0" width="100" height="40" fill="#fff" stroke="#333"/>
+        <text x="50" y="18" text-anchor="middle" font-size="9">YANGIN ÇIKIŞI</text>
+        <text x="50" y="30" text-anchor="middle" font-size="8">(serbest, eşya yok)</text>
+      </g>
+      <!-- Giriş + turnike + resepsiyon -->
+      <g id="zone-resepsiyon" class="draggable" transform="translate(41, 192)">
+        <rect x="0" y="0" width="140" height="80" fill="#b8d4e3" stroke="#333"/>
+        <text x="70" y="25" text-anchor="middle" font-size="9">GİRİŞ KAPISI</text>
+        <text x="70" y="42" text-anchor="middle" font-size="9">TURNİKE + RESEPSİYON</text>
+        <text x="70" y="65" text-anchor="middle" font-size="8">(WC tarafı, sol)</text>
+      </g>
+      <!-- Açık ofis -->
+      <g id="zone-acikofis" class="draggable" transform="translate(203, 40)">
+        <rect x="0" y="0" width="540" height="260" fill="#d4e8ed" stroke="#555" stroke-dasharray="4"/>
+        <text x="270" y="130" text-anchor="middle" font-size="12">AÇIK OFİS — 3 sıra x 15 masa (45 masa)</text>
+        <text x="270" y="148" text-anchor="middle" font-size="10">4 kolon uzunlamasına; en sağdaki L köşesinde</text>
+      </g>
+      <!-- 4 kolon -->
+      <g id="zone-kolon1" class="draggable" transform="translate(224, 226)">
+        <circle cx="22" cy="22" r="22" fill="#fff" stroke="#333"/>
+      </g>
+      <g id="zone-kolon2" class="draggable" transform="translate(385, 228)">
+        <circle cx="22" cy="22" r="22" fill="#fff" stroke="#333"/>
+      </g>
+      <g id="zone-kolon3" class="draggable" transform="translate(513, 227)">
+        <circle cx="22" cy="22" r="22" fill="#fff" stroke="#333"/>
+      </g>
+      <g id="zone-kolon4" class="draggable" transform="translate(636, 227)">
+        <circle cx="22" cy="22" r="22" fill="#fff" stroke="#333"/>
+        <text x="22" y="48" text-anchor="middle" font-size="8">L köşe</text>
+      </g>
+      <!-- WC -->
+      <g id="zone-wc" class="draggable" transform="translate(40, 357)">
+        <rect x="0" y="0" width="100" height="120" fill="#c9e0c9" stroke="#333"/>
+        <text x="50" y="55" text-anchor="middle" font-size="10">WC</text>
+      </g>
+      <!-- Çay-kahve -->
+      <g id="zone-caykahve" class="draggable" transform="translate(39, 40)">
+        <rect x="0" y="0" width="100" height="115" fill="#e8d4b8" stroke="#333"/>
+        <text x="50" y="52" text-anchor="middle" font-size="9">ÇAY-KAHVE</text>
+        <text x="50" y="68" text-anchor="middle" font-size="9">DİNLENME</text>
+      </g>
+      <!-- Toplantı odası -->
+      <g id="zone-toplanti" class="draggable" transform="translate(658, 318)">
+        <rect x="0" y="0" width="200" height="160" fill="#e3d5e8" stroke="#333"/>
+        <text x="100" y="70" text-anchor="middle" font-size="10">TOPLANTI ODASI</text>
+        <text x="100" y="88" text-anchor="middle" font-size="9">16 kişi (8+8) — L köşe</text>
+        <text x="100" y="138" text-anchor="middle" font-size="8">Kapı sağ duvar</text>
+      </g>
+      <!-- Sessiz kabinler -->
+      <g id="zone-sessiz" class="draggable" transform="translate(456, 386)">
+        <rect x="0" y="0" width="200" height="92" fill="#d8e6d4" stroke="#333"/>
+        <text x="100" y="42" text-anchor="middle" font-size="9">SESSİZ KABİNLER (5 adet)</text>
+      </g>
+      <!-- Telefon kabini -->
+      <g id="zone-telefon" class="draggable" transform="translate(249, 444)">
+        <rect x="0" y="0" width="50" height="35" fill="#d0e0d0" stroke="#333"/>
+        <text x="25" y="20" text-anchor="middle" font-size="7">TELEFON</text>
+      </g>
+      <!-- Sabit metin (sürüklenmez) -->
+      <text x="450" y="478" text-anchor="middle" font-size="9">Bahçe / yangın çıkışı (düz ayak)</text>
+    </svg>
+  </div>
+  <div class="legend">
+    <span style="background:#b8d4e3"></span> Resepsiyon &nbsp;
+    <span style="background:#d4e8ed"></span> Açık ofis &nbsp;
+    <span style="background:#c9e0c9"></span> WC &nbsp;
+    <span style="background:#e8d4b8"></span> Çay-kahve / dinlenme &nbsp;
+    <span style="background:#e3d5e8"></span> Toplantı &nbsp;
+    <span style="background:#d8e6d4"></span> Sessiz kabinler &nbsp;
+    <span style="background:#d0e0d0"></span> Telefon kabini
+  </div>
+
+  <script>
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    var KEY = 'kat-plani-viz-positions';
+    var defaultPos = {
+      'zone-yangin': [393, 438],
+      'zone-resepsiyon': [41, 192],
+      'zone-acikofis': [203, 40],
+      'zone-kolon1': [224, 226],
+      'zone-kolon2': [385, 228],
+      'zone-kolon3': [513, 227],
+      'zone-kolon4': [636, 227],
+      'zone-wc': [40, 357],
+      'zone-caykahve': [39, 40],
+      'zone-toplanti': [658, 318],
+      'zone-sessiz': [456, 386],
+      'zone-telefon': [249, 444]
+    };
+
+    function getPositions() {
+      var o = {};
+      document.querySelectorAll('#svgPlan g[id].draggable').forEach(function(g) {
+        var t = g.getAttribute('transform') || '';
+        var m = t.match(/translate\(([^,]+),\s*([^)]+)\)/);
+        if (m) o[g.id] = [parseFloat(m[1]), parseFloat(m[2])];
+      });
+      return o;
+    }
+
+    function applyPositions(pos) {
+      if (!pos) return;
+      Object.keys(pos).forEach(function(id) {
+        var g = document.getElementById(id);
+        if (g && pos[id]) g.setAttribute('transform', 'translate(' + pos[id][0] + ',' + pos[id][1] + ')');
+      });
+    }
+
+    function savePositions() {
+      var pos = getPositions();
+      try {
+        localStorage.setItem(KEY, JSON.stringify(pos));
+        document.getElementById('status').textContent = 'Pozisyonlar kaydedildi.';
+      } catch (e) {
+        document.getElementById('status').textContent = 'Kayıt hatası: ' + e.message;
+      }
+    }
+
+    function resetPositions() {
+      applyPositions(defaultPos);
+      try { localStorage.removeItem(KEY); } catch (_) {}
+      document.getElementById('status').textContent = 'Varsayılan pozisyonlara sıfırlandı.';
+    }
+
+    function exportHtml() {
+      var pos = getPositions();
+      var lines = [];
+      Object.keys(pos).sort().forEach(function(id) {
+        lines.push(id + ': [' + pos[id][0] + ', ' + pos[id][1] + ']');
+      });
+      var ta = document.getElementById('codeOut');
+      ta.value = '// Pozisyonlar (transform translate x,y)\n' + lines.join('\n') + '\n\n// Bu değerleri KAT-PLANI-VIZ.html içindeki ilgili <g transform="translate(x,y)"> ile değiştirin.';
+      ta.style.display = 'block';
+      ta.select();
+      document.getElementById('status').textContent = 'Pozisyon listesi yukarıda.';
+    }
+
+    function exportFullHtml() {
+      var svg = document.getElementById('svgPlan');
+      var pos = getPositions();
+      var parts = [];
+      [].forEach.call(svg.children, function(el) {
+        if (el.id && el.classList && el.classList.contains('draggable') && pos[el.id]) {
+          parts.push('<g id="' + el.id + '" class="draggable" transform="translate(' + pos[el.id][0] + ',' + pos[el.id][1] + ')">' + el.innerHTML + '</g>');
+        } else {
+          parts.push(el.outerHTML);
+        }
+      });
+      var svgContent = parts.join('\n      ');
+      var ta = document.getElementById('codeOut');
+      ta.value = '<!-- Güncel pozisyonlarla SVG içeriği — <svg> ile </svg> arasına yapıştırın -->\n\n' + svgContent;
+      ta.style.display = 'block';
+      ta.style.height = '320px';
+      ta.select();
+      document.getElementById('status').textContent = 'Güncel çizim kodu yukarıda; KAT-PLANI-VIZ.html içinde <svg>...</svg> arasını bununla değiştirin.';
+    }
+
+    // Sürükleme
+    var current = null, startX = 0, startY = 0, startTx = 0, startTy = 0;
+
+    function parseTransform(g) {
+      var t = g.getAttribute('transform') || '';
+      var m = t.match(/translate\(([^,]+),\s*([^)]+)\)/);
+      if (m) return [parseFloat(m[1]), parseFloat(m[2])];
+      return [0, 0];
+    }
+
+    function getSVGPoint(evt) {
+      var svg = document.getElementById('svgPlan');
+      var pt = svg.createSVGPoint();
+      pt.x = evt.clientX;
+      pt.y = evt.clientY;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+
+    function pointerDown(evt) {
+      if (evt.target.closest && !evt.target.closest('g.draggable')) return;
+      var g = evt.target.closest('g.draggable');
+      if (!g) return;
+      evt.preventDefault();
+      current = g;
+      var pt = getSVGPoint(evt);
+      var tr = parseTransform(g);
+      startX = pt.x;
+      startY = pt.y;
+      startTx = tr[0];
+      startTy = tr[1];
+      document.addEventListener('pointermove', pointerMove);
+      document.addEventListener('pointerup', pointerUp);
+    }
+
+    function pointerMove(evt) {
+      if (!current) return;
+      var pt = getSVGPoint(evt);
+      var dx = pt.x - startX;
+      var dy = pt.y - startY;
+      current.setAttribute('transform', 'translate(' + (startTx + dx) + ',' + (startTy + dy) + ')');
+    }
+
+    function pointerUp() {
+      current = null;
+      document.removeEventListener('pointermove', pointerMove);
+      document.removeEventListener('pointerup', pointerUp);
+    }
+
+    document.getElementById('svgPlan').addEventListener('pointerdown', pointerDown);
+
+    // Sayfa yüklendiğinde kayıtlı pozisyonları uygula
+    (function loadSaved() {
+      try {
+        var saved = localStorage.getItem(KEY);
+        if (saved) {
+          var pos = JSON.parse(saved);
+          applyPositions(pos);
+          document.getElementById('status').textContent = 'Kayıtlı pozisyonlar yüklendi.';
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
