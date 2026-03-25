@@ -33,7 +33,7 @@ export function AdminReviewQueue() {
         }}
       >
         <p style={{ margin: 0, fontSize: '0.92rem', lineHeight: 1.6 }}>
-          <strong>İç not:</strong> Bu sekme, sitedeki <strong>/topluluk</strong> etkinlik takvimiyle karıştırılmamalıdır.
+          <strong>İç not:</strong> Bu sekme, admindeki <strong>Operasyon özeti</strong> içindeki yerel etkinlik planlarıyla karıştırılmamalıdır.
           Aşağıdaki kayıtlar araştırma veya ileride değerlendirilecek dış kaynaklar içindir; tarih ve aksiyon sizin
           takviminize yazılır.
         </p>

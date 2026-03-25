@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { AdminLegalPrintPack } from '@/app/components/admin/AdminLegalPrintPack';
 import { AdminEventPlaybook } from '@/app/components/admin/AdminEventPlaybook';
+import { AdminInternalOps } from '@/app/components/admin/AdminInternalOps';
 import { AdminReviewQueue } from '@/app/components/admin/AdminReviewQueue';
 import { formatReservationResource } from '@/lib/coworking';
 
@@ -28,7 +29,7 @@ type PendingReservation = {
 };
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<'users' | 'reservations' | 'legal' | 'review' | 'playbook'>('users');
+  const [tab, setTab] = useState<'users' | 'reservations' | 'legal' | 'review' | 'playbook' | 'ops'>('users');
   const [users, setUsers] = useState<PendingUser[]>([]);
   const [reservations, setReservations] = useState<PendingReservation[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -176,6 +177,14 @@ export default function AdminPage() {
             >
               Etkinlik playbook
             </button>
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setTab('ops')}
+              style={{ opacity: tab === 'ops' ? 1 : 0.7 }}
+            >
+              Operasyon özeti
+            </button>
           </div>
 
           {info && (
@@ -211,6 +220,16 @@ export default function AdminPage() {
           )}
 
           {tab === 'playbook' && <AdminEventPlaybook />}
+
+          {tab === 'ops' && (
+            <div className="no-print" style={{ marginBottom: '1rem' }}>
+              <button className="btn" type="button" onClick={() => window.print()}>
+                Operasyon özetini yazdır
+              </button>
+            </div>
+          )}
+
+          {tab === 'ops' && <AdminInternalOps />}
 
           {tab === 'users' && (
             <div style={{ overflowX: 'auto' }}>

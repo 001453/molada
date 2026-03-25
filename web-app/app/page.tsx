@@ -73,19 +73,17 @@ export default function HomePage() {
         </section>
 
         <section className="card">
-          <h2>Topluluk ve şeffaflık</h2>
+          <h2>Şeffaflık ve iletişim</h2>
           <p style={{ marginBottom: '0.75rem' }}>
-            Etkinlik planları yalnızca <strong>Molada mekânı ve yerel mahalle</strong> için; işletme ve teknoloji özeti ayrı sayfada.
+            Üyelik, mekân ve fiyatlar hakkında sorularınız için SSS ve iletişim sayfalarımızı kullanın; mekân içi duyurular doğrudan
+            paylaşılır.
           </p>
           <p style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: 0 }}>
-            <Link href="/topluluk" className="btn btn-secondary">
-              Yerel etkinlik planı
-            </Link>
-            <Link href="/isletme-rehberi" className="btn btn-secondary">
-              İşletme &amp; uygulama durumu
-            </Link>
             <Link href="/sss" className="btn btn-secondary">
               SSS
+            </Link>
+            <Link href="/iletisim" className="btn btn-secondary">
+              İletişim
             </Link>
           </p>
         </section>

@@ -41,10 +41,6 @@ export default function RootLayout({
           <div className="container">
             <span>© {new Date().getFullYear()} {site.name}. Tüm hakları saklıdır.</span>
             <span style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', alignItems: 'center' }}>
-              <a href="/topluluk">Topluluk</a>
-              <span aria-hidden>·</span>
-              <a href="/isletme-rehberi">İşletme rehberi</a>
-              <span aria-hidden>·</span>
               <a href="/sss">SSS</a>
               <span aria-hidden>·</span>
               <a href="/iletisim">İletişim</a>

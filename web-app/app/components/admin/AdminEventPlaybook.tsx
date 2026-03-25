@@ -34,9 +34,9 @@ export function AdminEventPlaybook() {
         }}
       >
         <p style={{ margin: 0, fontSize: '0.92rem', lineHeight: 1.65 }}>
-          <strong>Ic operasyon rehberi:</strong> Asagidaki kalemler Spacebring tarzi coworking etkinlik fikirlerinden
-          uyarlanmistir; her biri icin hazirlik + uygulama iskeleti vardir. Gercek duyuru ve takvim{' '}
-          <strong>/topluluk</strong> ve uye kanallarinizla uyumlu planlanir. Bu liste web sitesinde yayinlanmaz.
+          <strong>İç operasyon rehberi:</strong> Aşağıdaki kalemler Spacebring tarzı coworking etkinlik fikirlerinden
+          uyarlanmıştır; her biri için hazırlık + uygulama iskeleti vardır. Gerçek duyuru ve takvim{' '}
+          <strong>Operasyon özeti</strong> ve üye kanallarınızla uyumlu planlanır. Bu liste herkese açık sitede yayınlanmaz.
         </p>
         <p style={{ margin: '0.65rem 0 0', fontSize: '0.85rem', color: 'var(--muted)' }}>
           Toplam <strong>{total}</strong> etkinlik sablonu, <strong>{ADMIN_EVENT_PLAYBOOK.length}</strong> kategori.

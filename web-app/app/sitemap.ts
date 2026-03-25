@@ -10,8 +10,6 @@ const PATHS = [
   '/iletisim',
   '/kvkk',
   '/giris',
-  '/topluluk',
-  '/isletme-rehberi',
   '/sss',
 ];
 

@@ -2,6 +2,12 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  async redirects() {
+    return [
+      { source: '/topluluk', destination: '/', permanent: true },
+      { source: '/isletme-rehberi', destination: '/', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -7,7 +7,6 @@ import {
   formatReservationResource,
   reservationStatusTr,
 } from '@/lib/coworking';
-import { MOLADA_LOCAL_EVENT_PLANS } from '@/lib/localEvents';
 import Link from 'next/link';
 
 type ResourceType = 'MEETING_ROOM' | 'SILENT_CABIN';
@@ -145,22 +144,10 @@ export default function UyePaneliPage() {
       {error && <p style={{ color: '#ff6b6b' }}>{error}</p>}
 
       <section className="card" style={{ marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0 }}>Yerel topluluk özeti</h2>
-        <p style={{ marginBottom: '0.75rem', color: 'var(--text-secondary)' }}>
-          Etkinlikler <strong>sadece Molada</strong> ve mahalle odaklıdır. Güncel saat ve duyuru için{' '}
-          <Link href="/iletisim">iletişim</Link> ve ortak duyuru kanallarını takip edin.
-        </p>
-        <ul style={{ margin: 0, paddingLeft: '1.2rem', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-          {MOLADA_LOCAL_EVENT_PLANS.map((e) => (
-            <li key={e.id} style={{ marginBottom: '0.5rem' }}>
-              <strong style={{ color: 'var(--foreground)' }}>{e.title}</strong> — {e.cadence} ({e.status === 'pilot' ? 'pilot' : 'planlanan'})
-            </li>
-          ))}
-        </ul>
-        <p style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-          <Link href="/topluluk" className="btn btn-secondary" style={{ padding: '0.45rem 0.9rem', fontSize: '0.9rem' }}>
-            Tüm planı aç
-          </Link>
+        <h2 style={{ marginTop: 0 }}>Duyurular</h2>
+        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>
+          Mekân içi saat ve etkinlik duyuruları operasyon tarafından paylaşılır. Sorularınız için{' '}
+          <Link href="/iletisim">iletişim</Link> sayfasını kullanabilirsiniz.
         </p>
       </section>
 
